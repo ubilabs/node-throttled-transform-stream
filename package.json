@@ -1,5 +1,5 @@
 {
-  "name": "throttled-stream",
+  "name": "throttled-transform-stream",
   "version": "0.0.1",
   "description": "Transform stream which can be throttled to meet QPS restrictions",
   "main": "dist",
