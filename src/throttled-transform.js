@@ -7,7 +7,7 @@ const _qps = new WeakMap(),
   _queries = new WeakMap(),
   _queue = new WeakMap();
 
-export default class ThrottledStream extends ParallelTransform {
+export default class ThrottledTransform extends ParallelTransform {
   constructor(qps = 35) {
     super(qps, {objectMode: true});
 
