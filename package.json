@@ -4,9 +4,16 @@
   "description": "Transform stream which can be throttled to meet QPS restrictions",
   "main": "dist",
   "scripts": {
-    "test": "ava",
+    "pretest": "npm run lint",
+    "test": "ava test/*.js --verbose",
     "lint": "eslint ./src",
     "build": "babel src/ --out-dir dist/"
+  },
+  "ava": {
+    "require": [
+      "babel-register"
+    ],
+    "babel": "inherit"
   },
   "author": "Keno Schwalb <schwalb@ubilabs.net>",
   "license": "MIT",
@@ -14,7 +21,9 @@
     "ava": "^0.15.2",
     "babel-cli": "^6.10.1",
     "babel-eslint": "^6.1.2",
+    "babel-plugin-transform-class-properties": "^6.11.5",
     "babel-preset-es2015": "^6.9.0",
-    "eslint": "^3.1.1"
+    "eslint": "^3.1.1",
+    "sinon": "^1.17.5"
   }
 }
