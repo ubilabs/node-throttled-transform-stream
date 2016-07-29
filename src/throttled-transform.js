@@ -8,8 +8,8 @@ const _qps = new WeakMap(),
   _queue = new WeakMap();
 
 export default class ThrottledTransform extends ParallelTransform {
-  constructor(qps = 35) {
-    super(qps, {objectMode: true});
+  constructor(qps = 35, options = {}) {
+    super(qps, options);
 
     _qps.set(this, qps);
     _bucketRunning.set(this, false);
