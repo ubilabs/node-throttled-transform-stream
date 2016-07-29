@@ -10,7 +10,7 @@ export function getThrottledTransformStream(
   throttledTransform = (data, done) => {
     done(null, data);
   },
-  qps = 35 
+  qps = 35
 ) {
   class TransformTestClass extends ThrottledTransform {
     constructor() {
