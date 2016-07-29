@@ -2,14 +2,31 @@
 // TODO: use NPM package
 import ParallelTransform from '../../node-parallel-transform-stream/dist/parallel-transform'; // eslint-disable-line max-len
 
+const _qps = new WeakMap(),
+  _bucketRunning = new WeakMap(),
+  _queries = new WeakMap(),
+  _queue = new WeakMap();
+
 export default class ThrottledStream extends ParallelTransform {
   constructor(qps = 35) {
     super(qps, {objectMode: true});
 
-    this.qps = qps;
-    this.bucketRunning = false;
-    this.queries = 0;
-    this.queue = [];
+    _qps.set(this, qps);
+    _bucketRunning.set(this, false);
+    _queries.set(this, 0);
+    _queue.set(this, []);
+  }
+
+  static create(qps = 1, transformFunction = null) {
+    class Transform extends ThrottledTransform {
+      constructor() {
+        super(qps);
+      }
+
+      _throttledTransform = transformFunction;
+    }
+
+    return new Transform();
   }
 
   /**
@@ -62,13 +79,13 @@ export default class ThrottledStream extends ParallelTransform {
    * @returns {?} Undefined value to stop execution
    **/
   _runThrottled(...query) {
-    if (!this.bucketRunning) {
+    if (!_bucketRunning.get(this)) {
       this._startBucket();
-    } else if (this.queries >= this.qps) {
-      return this.queue.push(query);
+    } else if (_queries.get(this) >= _qps.get(this)) {
+      return _queue.get(this).push(query);
     }
 
-    this.queries++;
+    _queries.set(this, _queries.get(this) + 1);
     return this._throttledTransform(...query);
   }
 
@@ -78,19 +95,19 @@ export default class ThrottledStream extends ParallelTransform {
    **/
   _startBucket() {
     setTimeout(() => {
-      this.bucketRunning = false;
-      this.queries = 0;
+      _bucketRunning.set(this, false);
+      _queries.set(this, 0);
       this._drainQueue();
     }, 1000);
-    this.bucketRunning = true;
+    _bucketRunning.set(this, true);
   }
 
   /**
    * Remove `qps` items from the queue and process them
    **/
   _drainQueue() {
-    this.queue
-      .splice(0, this.qps)
+    _queue.get(this)
+      .splice(0, _qps.get(this))
       .forEach(query => {
         this._processQuery(...query);
       });
