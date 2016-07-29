@@ -53,3 +53,59 @@ test('should allow instantiation via function call', t => {
 
   t.true(new TStream() instanceof ThrottledTransform);
 });
+
+test.cb('should run `qps` transforms in parallel', t => {
+  const dones = [],
+    TransformStub = ThrottledTransform.create(3, (data, encoding, done) => {
+      dones.push(done);
+    }),
+    transformInstance = new TransformStub();
+
+  transformInstance.on('data', () => {
+  });
+
+  transformInstance.on('end', t.end);
+
+  transformInstance.write('some data');
+  transformInstance.write('some data');
+  transformInstance.write('some data');
+
+  t.is(dones.length, 3);
+  dones.forEach(done => done(null, 'result'));
+  transformInstance.end();
+});
+
+test.cb('should throttle according to QPS', t => {
+  const dones = [],
+    TransformStub = ThrottledTransform.create(3, (data, encoding, done) => {
+      dones.push(done);
+    }),
+    transformInstance = new TransformStub();
+
+  transformInstance.on('data', () => {
+  });
+
+  transformInstance.on('end', t.end);
+
+  const startTime = Date.now();
+
+  transformInstance.write('some data');
+  transformInstance.write('some data');
+  transformInstance.write('some data');
+  transformInstance.write('some data');
+
+  t.is(dones.length, 3);
+  dones.forEach(done => done(null, 'result'));
+
+  const interval = setInterval(() => {
+    if (dones.length === 4) {
+      // last transform should not start until a second
+      // after the first 3 started
+      t.true(Date.now() - startTime >= 1000);
+
+      clearInterval(interval);
+      dones[3](null, 'result');
+      transformInstance.end();
+    }
+  }, 100);
+});
