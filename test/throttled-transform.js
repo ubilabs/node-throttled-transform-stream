@@ -46,35 +46,10 @@ test('should throw an error when not implementing _throttledTransform', t => {
   }, 'Not implemented');
 });
 
-test.cb('should pass options on to the stream.Transform constructor', t => {
-  const transformStub = sinon.stub().callsArg(2),
-    data = {someKey: 'someValue'},
-    maxThrottled = 1,
-    options = {objectMode: true},
-    ThrottledTransformStub = getThrottledTransformStream(
-      transformStub,
-      maxThrottled,
-      options
-    ),
-    transformInstance = new ThrottledTransformStub();
-
-  transformInstance.on('data', result => {
-    t.deepEqual(result, data);
-  });
-
-  transformInstance.on('end', () => {
-    t.true(transformStub.calledOnce);
-    t.end();
-  });
-
-  transformInstance.write(data);
-  transformInstance.end();
-});
-
 test('should allow instantiation via function call', t => {
-  const stream = ThrottledTransform.create(1, (data, encoding, done) => {
+  const TStream = ThrottledTransform.create(1, (data, encoding, done) => {
     done(null, data);
   });
 
-  t.true(stream instanceof ThrottledTransform);
+  t.true(new TStream() instanceof ThrottledTransform);
 });

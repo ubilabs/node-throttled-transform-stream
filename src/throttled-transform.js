@@ -26,7 +26,7 @@ export default class ThrottledTransform extends ParallelTransform {
       _throttledTransform = transformFunction;
     }
 
-    return new Transform();
+    return Transform;
   }
 
   /**
