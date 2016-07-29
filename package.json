@@ -5,8 +5,8 @@
   "main": "dist",
   "scripts": {
     "pretest": "npm run lint",
-    "test": "ava test/*.js --verbose",
-    "lint": "eslint ./src",
+    "test": "ava test/*.js --verbose --timeout=5s",
+    "lint": "eslint ./src ./test",
     "build": "babel src/ --out-dir dist/"
   },
   "ava": {
