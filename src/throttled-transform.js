@@ -8,22 +8,28 @@ const _qps = new WeakMap(),
   _queue = new WeakMap();
 
 export default class ThrottledTransform extends ParallelTransform {
-  constructor(qps = 35, options = {}) {
-    super(Object.assign({}, options, {maxParallel: qps}));
+  constructor(options = {}) {
+    const queriesPerSecond = options.queriesPerSecond || 35,
+      defaultOptions = {
+        maxParallel: queriesPerSecond
+      };
 
-    _qps.set(this, qps);
+    super(Object.assign({}, defaultOptions, options));
+
+    _qps.set(this, queriesPerSecond);
     _bucketRunning.set(this, false);
     _queries.set(this, 0);
     _queue.set(this, []);
   }
 
-  static create(qps = 1, transformFunction = null) {
+  static create(transform, flush = done => done(), defaultOptions = {}) {
     class Transform extends ThrottledTransform {
-      constructor() {
-        super(qps);
+      constructor(options) {
+        super(Object.assign({}, defaultOptions, options));
       }
 
-      _throttledTransform = transformFunction;
+      _throttledTransform = transform;
+      _throttledFlush = flush;
     }
 
     return Transform;

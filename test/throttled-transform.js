@@ -54,11 +54,11 @@ test('should allow instantiation via function call', t => {
   t.true(new TStream() instanceof ThrottledTransform);
 });
 
-test.cb('should run `qps` transforms in parallel', t => {
+test.cb('should run `queriesPerSecond` transforms in parallel', t => {
   const dones = [],
-    TransformStub = ThrottledTransform.create(3, (data, encoding, done) => {
+    TransformStub = ThrottledTransform.create((data, encoding, done) => {
       dones.push(done);
-    }),
+    }, done => done(), {queriesPerSecond: 3}),
     transformInstance = new TransformStub();
 
   transformInstance.on('data', () => {
@@ -77,9 +77,9 @@ test.cb('should run `qps` transforms in parallel', t => {
 
 test.cb('should throttle according to QPS', t => {
   const dones = [],
-    TransformStub = ThrottledTransform.create(3, (data, encoding, done) => {
+    TransformStub = ThrottledTransform.create((data, encoding, done) => {
       dones.push(done);
-    }),
+    }, done => done(), {queriesPerSecond: 3}),
     transformInstance = new TransformStub();
 
   transformInstance.on('data', () => {

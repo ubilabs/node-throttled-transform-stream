@@ -9,14 +9,9 @@ import ThrottledTransform from '../../src/throttled-transform';
 export function getThrottledTransformStream(
   throttledTransform = (data, done) => {
     done(null, data);
-  },
-  qps = 35
-) {
-  class TransformTestClass extends ThrottledTransform {
-    constructor() {
-      super(qps);
-    }
   }
+) {
+  class TransformTestClass extends ThrottledTransform {}
 
   TransformTestClass.prototype // eslint-disable-line no-underscore-dangle
     ._throttledTransform = throttledTransform;
