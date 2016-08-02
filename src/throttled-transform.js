@@ -8,6 +8,14 @@ const _qps = new WeakMap(),
   _queue = new WeakMap();
 
 export default class ThrottledTransform extends ParallelTransform {
+  /**
+   * ThrottledTransform instance
+   * All child class must implement the `_throttledTransform` function.
+   * Child classes should not implement the `_transform` and `_flush` functions.
+   *
+   * @param {Object} options Options which will be passed to the
+   *                         `stream.Transform` constructor
+   **/
   constructor(options = {}) {
     const queriesPerSecond = options.queriesPerSecond || 35,
       defaultOptions = {
@@ -22,6 +30,14 @@ export default class ThrottledTransform extends ParallelTransform {
     _queue.set(this, []);
   }
 
+  /**
+   * Helper function for easily creating ThrottledTransform streams
+   *
+   * @param {Function} transform The stream's _transform function
+   * @param {Function} flush The stream's _flush function
+   * @param {Object} defaultOptions Default options for the class constructor
+   * @returns {Class} A ParallelTransform class
+   **/
   static create(transform, flush = done => done(), defaultOptions = {}) {
     class Transform extends ThrottledTransform {
       constructor(options) {
