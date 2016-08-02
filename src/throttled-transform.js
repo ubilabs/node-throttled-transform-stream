@@ -9,7 +9,7 @@ const _qps = new WeakMap(),
 
 export default class ThrottledTransform extends ParallelTransform {
   constructor(qps = 35, options = {}) {
-    super(qps, options);
+    super(Object.assign({}, options, {maxParallel: qps}));
 
     _qps.set(this, qps);
     _bucketRunning.set(this, false);
