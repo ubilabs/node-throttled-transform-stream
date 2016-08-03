@@ -56,9 +56,9 @@ They may implement `_throttledFlush`, although this is not required.
 ### API for extending ThrottledTransform
 
 The constructor of the `ThrottledTransform` class accepts all options accepted by `stream.Transform`. In addition, it accepts the `queriesPerSecond` property, which sets the maximum number of transformations per second.  
-The rate limitation follows a *bucket model*: `queriesPerSecond` requests are started simultaneously. The limitation code then waits until a full second has passed since the first query was started, and then starts the next batch of `queriesPerSecond`.
+The rate limitation follows a *bucket model*: `queriesPerSecond` transformations are started simultaneously. The limitation code then waits until a full second has passed since the first transformation was started, and then starts the next batch of `queriesPerSecond` transformations.
 
-All classes extending `ThrottledTransform` must implement the `_throttledTransform` method, and may implement the `_parallelFlush` method.
+All classes extending `ThrottledTransform` must implement the `_throttledTransform` method, and may implement the `_throttledFlush` method.
 
 **ThrottledTransform._throttledTransform(chunk, encoding, callback)**
 
