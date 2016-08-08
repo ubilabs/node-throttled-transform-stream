@@ -49,8 +49,8 @@ They may implement `_throttledFlush`, although this is not required.
 
 **ThrottledTransform.create(transform, flush = function(done) { done(); }, defaultOptions = {})**
 
-* `transform` `<Function>` The \_transform function of the stream. See below for more details
-* `flush` `<Function>` The \_flush function of the stream. See below for more details
+* `transform` `<Function>` The \_transform function of the stream. [See below](#api-for-extending-throttledtransform) for more details
+* `flush` `<Function>` The \_flush function of the stream. [See below](#api-for-extending-throttledtransform) for more details
 * `defaultOptions` `<Object>` Default options for the class constructor
 
 ### API for extending ThrottledTransform
