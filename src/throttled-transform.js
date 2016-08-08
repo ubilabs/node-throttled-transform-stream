@@ -54,7 +54,7 @@ export default class ThrottledTransform extends ParallelTransform {
   /**
    * Executed every time data was pushed into the stream
    * @param {?}        data Data to be transformed
-   * @param {string}   encoding Encoding, if it `chunk` is a string
+   * @param {string}   encoding Encoding, if `chunk` is a string
    * @param {Function} done Callback which must be executed
    *                        when transformations have finished
    **/
@@ -66,7 +66,7 @@ export default class ThrottledTransform extends ParallelTransform {
    * Run this query, either unthrottled
    * (if _skipThrottle is implemented and returned true), or throttled.
    * @param {?}        data Data to be transformed
-   * @param {string}   encoding Encoding, if it `chunk` is a string
+   * @param {string}   encoding Encoding, if `chunk` is a string
    * @param {Function} done Callback which must be executed
    *                        when transformations have finished
    * @returns {?} Undefined value to stop execution
@@ -79,7 +79,7 @@ export default class ThrottledTransform extends ParallelTransform {
    * Check if this query can be processed without an asynchronous operation.
    * Pushes the result if this succeeded.
    * @param {?}        data Data to be transformed
-   * @param {string}   encoding Encoding, if it `chunk` is a string
+   * @param {string}   encoding Encoding, if `chunk` is a string
    * @param {Function} done Callback which must be executed
    *                        when transformations have finished
    * @returns {boolean} True if the query could be completed
@@ -98,6 +98,10 @@ export default class ThrottledTransform extends ParallelTransform {
   /**
    * Run a query if there is a slot available.
    * Otherwise add it to the queue.
+   * @param {?}        data Data to be transformed
+   * @param {string}   encoding Encoding, if `chunk` is a string
+   * @param {Function} done Callback which must be executed
+   *                        when transformations have finished
    * @returns {?} Undefined value to stop execution
    **/
   _runThrottled(...query) {
