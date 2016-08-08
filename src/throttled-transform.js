@@ -4,13 +4,13 @@ import ParallelTransform from '../../node-parallel-transform-stream/dist/paralle
 
 const _qps = new WeakMap(),
   _bucketRunning = new WeakMap(),
-  _queries = new WeakMap(),
+  _queriesRunning = new WeakMap(),
   _queue = new WeakMap();
 
 export default class ThrottledTransform extends ParallelTransform {
   /**
    * ThrottledTransform instance
-   * All child class must implement the `_throttledTransform` function.
+   * All child classes must implement the `_throttledTransform` function.
    * Child classes should not implement the `_transform` and `_flush` functions.
    *
    * @param {Object} options Options which will be passed to the
@@ -26,7 +26,7 @@ export default class ThrottledTransform extends ParallelTransform {
 
     _qps.set(this, queriesPerSecond);
     _bucketRunning.set(this, false);
-    _queries.set(this, 0);
+    _queriesRunning.set(this, 0);
     _queue.set(this, []);
   }
 
@@ -72,7 +72,7 @@ export default class ThrottledTransform extends ParallelTransform {
    * @returns {?} Undefined value to stop execution
    **/
   _processQuery(...query) {
-    return this._unthrottled(...query) || this._runThrottled(...query);
+    return this._runUnthrottled(...query) || this._runThrottled(...query);
   }
 
   /**
@@ -85,7 +85,7 @@ export default class ThrottledTransform extends ParallelTransform {
    * @returns {boolean} True if the query could be completed
    *                    wth a synchronous request
    **/
-  _unthrottled(data, encoding, done) {
+  _runUnthrottled(data, encoding, done) {
     const result = this._skipThrottle(data, encoding);
     if (result) {
       done(null, result);
@@ -107,11 +107,11 @@ export default class ThrottledTransform extends ParallelTransform {
   _runThrottled(...query) {
     if (!_bucketRunning.get(this)) {
       this._startBucket();
-    } else if (_queries.get(this) >= _qps.get(this)) {
+    } else if (_queriesRunning.get(this) >= _qps.get(this)) {
       return _queue.get(this).push(query);
     }
 
-    _queries.set(this, _queries.get(this) + 1);
+    _queriesRunning.set(this, _queriesRunning.get(this) + 1);
     return this._throttledTransform(...query);
   }
 
@@ -122,7 +122,7 @@ export default class ThrottledTransform extends ParallelTransform {
   _startBucket() {
     setTimeout(() => {
       _bucketRunning.set(this, false);
-      _queries.set(this, 0);
+      _queriesRunning.set(this, 0);
       this._drainQueue();
     }, 1000);
     _bucketRunning.set(this, true);
