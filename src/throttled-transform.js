@@ -148,7 +148,7 @@ export default class ThrottledTransform extends ParallelTransform {
    *                        when transformations have finished
    **/
   _throttledTransform(data, encoding, done) { // eslint-disable-line no-unused-vars, max-len
-    throw new Error('Not implemented');
+    throw new Error('_throttledTransform not implemented');
   }
 
   /**

@@ -43,7 +43,7 @@ test('should throw an error when not implementing _throttledTransform', t => {
 
   t.throws(() => {
     transformInstance.write('some data');
-  }, 'Not implemented');
+  }, '_throttledTransform not implemented');
 });
 
 test('should allow instantiation via function call', t => {
