@@ -47,11 +47,12 @@ test('should throw an error when not implementing _throttledTransform', t => {
 });
 
 test('should allow instantiation via function call', t => {
-  const TStream = ThrottledTransform.create(1, (data, encoding, done) => {
-    done(null, data);
-  });
+  const ThrottledStream = ThrottledTransform.create(
+    1, (data, encoding, done) => {
+      done(null, data);
+    });
 
-  t.true(new TStream() instanceof ThrottledTransform);
+  t.true(new ThrottledStream() instanceof ThrottledTransform);
 });
 
 test.cb('should run `queriesPerSecond` transforms in parallel', t => {
