@@ -1,0 +1,20 @@
+{
+  "non-interactive": true,
+  "verbose": true,
+  "commitMessage": "chore(release): %s",
+  "tagName": "%s",
+  "tagAnnotation": "Release %s",
+  "buildCommand": "npm run test && npm run generatechangelog && git add CHANGELOG.md",
+  "changelogCommand": "conventional-changelog -p angular",
+  "requireCleanWorkingDir": true,
+  "npm": {
+    "publish": true
+  },
+  "dist": {
+    "baseDir": null
+  },
+  "github": {
+    "release": true,
+    "tokenRef": "GITHUB_TOKEN"
+  }
+}

@@ -1,6 +1,5 @@
 /* eslint-disable no-underscore-dangle */
-// TODO: use NPM package
-import ParallelTransform from '../../node-parallel-transform-stream/dist/parallel-transform'; // eslint-disable-line max-len
+import ParallelTransform from 'parallel-transform-stream';
 
 const _qps = new WeakMap(),
   _bucketRunning = new WeakMap(),
