@@ -1,4 +1,4 @@
-# Throttled Transform Stream
+# Throttled Transform Stream [![Build Status](https://travis-ci.org/ubilabs/node-throttled-transform-stream.svg?branch=master)](https://travis-ci.org/ubilabs/node-throttled-transform-stream)
 
 A NodeJS transform stream which runs a limited number of transformations per second, in parallel, and preserves input order. Optimised for API queries.
 
